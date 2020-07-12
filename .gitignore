@@ -1,0 +1,7 @@
+*.pyc
+.env.prod
+.env.prod.db
+.env.proxy
+.Dockerfile.swp
+ddx_aws_key.pem
+deploy_aws

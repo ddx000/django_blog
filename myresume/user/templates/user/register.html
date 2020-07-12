@@ -1,0 +1,26 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+<!--load crispy 進來後 不用會bootstrap也能讓註冊表單好看! (套件化)-->
+
+
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+<!--使用者創建表單，用POST將資訊傳出去-->
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Join Today</legend>
+                {{ form|crispy}}
+<!-- crispy filter，幫我們做styling-->
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Sign Up</button>
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Already Have An Account? <a class="ml-2" href="{%url 'login'%}">Sign In</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}
