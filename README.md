@@ -1,26 +1,100 @@
----
-tags: web
----
-
-# django-blog
-
-
-- Use Django, Bootstrap, PostgreSQL, Gunicorn, Nginx to build a full-featured blog.
-- Use docker-compose, PostgreSQL(AWS RDS),  deployed on AWS EC2 with SSL Certificate (Let's encrypt it).
-
-- Change logs:
-2020/04/16: Deployed to linode with Apache2
-2020/07/11: Refresh a new git repository as new one because big change in file structure (Docker, AWS, Nginx)
-2020/07/12: change Server from linode to AWS because of the free trail on linode is over
+# Django-blog
+- Use Django, Bootstrap, PostgreSQL, Gunicorn, Nginx to build a blog for my personal use.  
+- Use docker-compose, PostgreSQL(AWS RDS),  deployed on AWS EC2 with SSL Certificate (Let's encrypt it).  
+- Website: https://cwhuang.serveblog.net/  
+- Images
+    - Structure of the website
+![](https://i.imgur.com/v3SJI6i.png)
+    - Homepage
+![](https://i.imgur.com/g2FIQm6.png)
+    - Login
+![](https://i.imgur.com/3oy06VQ.png)
+    - Register
+![](https://i.imgur.com/abZrHBY.png)
+    - Post
+![](https://i.imgur.com/TWgmarR.png)
+    - Update Profile
+![](https://i.imgur.com/qCjecO0.png)
+    - Reset Password
+![](https://i.imgur.com/VUpSyZ1.png)
+    - Comfirmation mail
+![](https://i.imgur.com/jivutTV.png)
 
 - Functions:
-
     - User registration with basic login/logout functions
-    - User profile, user can customize profile photo (upload to AWS S3)
+    - User profile, user can customize profile photo 
     - Responsive web design (RWD)
+    - Password Reset
     - Deployment (Docker + gunicorn + nginx + Let's encrypt it)
 
+# Set up and Deployment
 
+
+## Python 3.7.3 & ubuntu 18.04 LTS
+
+## Local test
+```
+virtualenv venv
+source ./venv/bin/activate
+pip install -r ./myresume/requiremnt.txt
+python manage.py runserver
+```
+## Docker 
+you should create .env for environment variables, I didn't upload it to Github because of the privacy
+
+**.env.prod** Like this one
+```
+DEBUG=1
+SECRET_KEY=<yours>
+DJANGO_ALLOWED_HOSTS=<yours>
+SQL_ENGINE=django.db.backends.postgresql
+SQL_DATABASE=djangoec2
+```
+
+
+```
+docker-compose up -d --build
+docker-compose exec web python manage.py migrate --noinput
+docker-compose exec web python manage.py collectstatic --no-input --clear
+```
+
+## Docker image push&pull on AWS ECR
+- Please create AWS account and get some basic knowledge about EC2/ECR/RDS/IAM...[Tutorial](https://testdriven.io/blog/django-docker-https-aws/)
+
+```
+aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin <ECR Docker repository>
+scp -i "ddx_aws_key.pem" -r $(pwd)/{myresume,nginx,.env.prod,.env.proxy,docker-compose.yml} <your-aws>:/appweb
+ssh -i "ddx_aws_key.pem" 
+sudo docker pull <ECR Docker repository>:web
+sudo docker pull <ECR Docker repository>:nginx-proxy
+```
+
+
+-----
+# Change logs:
+## 1.1
+2020/07/12  
+- change Server from linode to AWS EC2
+- switch from Apache to Nginx & gunicorn
+- dockerlize deployment(AWS ECR)
+- change database from sqlite to postgreSQL(AWS RDS)
+
+## 1.0
+2020/04/16  
+- Deployed to linode with Apache2  
+
+# Feature Roadmap
+> I will try my best to squeeze my time to finish this features soon lol...
+- Support Markdown format and highlight code section (Aug. 2020)
+- Social-media login (Facebook, Instagram, GitHub) and share post (Sep. 2020)
+- Tags and Search (Oct. 2020)
+- Upload mediafile to AWS S3
+- Unittest
+
+
+
+
+-----
 # Deploy on AWS
 > Because the free trail of linode will expire soon, I choose to switch to AWS EC2, and also practice my Devops skills with Docker, Nginx, and seperated database and media system (AWS RDS, AWS S3)
 
