@@ -1,7 +1,8 @@
 # Django-blog
 - Use Django, Bootstrap, PostgreSQL, Gunicorn, Nginx to build a blog for my personal use.  
 - Use docker-compose, PostgreSQL(AWS RDS),  deployed on AWS EC2 with SSL Certificate (Let's encrypt it).  
-- Website: https://cwhuang.serveblog.net/  
+- Website: https://cwhuang.serveblog.net/
+**This website is no longer available due to the charge fee of AWS**
 - Images
     - Structure of the website
 ![](https://i.imgur.com/v3SJI6i.png)
